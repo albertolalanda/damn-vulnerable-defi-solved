@@ -27,6 +27,7 @@ contract UnstoppableLender is ReentrancyGuard {
         require(amount > 0, "Must deposit at least one token");
         // Transfer token from sender. Sender must have first approved them.
         damnValuableToken.transferFrom(msg.sender, address(this), amount);
+        // PoolBalance is updated if depositTokens() is called, but not if we send the DBT tokens directly...
         poolBalance = poolBalance + amount;
     }
 
@@ -37,6 +38,7 @@ contract UnstoppableLender is ReentrancyGuard {
         require(balanceBefore >= borrowAmount, "Not enough tokens in pool");
 
         // Ensured by the protocol via the `depositTokens` function
+        // Sending the tokens to this contract directly permanetly breaks this contract.
         assert(poolBalance == balanceBefore);
         
         damnValuableToken.transfer(msg.sender, borrowAmount);
