@@ -24,6 +24,8 @@ contract FlashLoanReceiver {
         uint256 amountToBeRepaid = msg.value + fee;
 
         require(address(this).balance >= amountToBeRepaid, "Cannot borrow that much");
+
+        // The loan receiver does not have any check on who iniciated the flash loan
         
         _executeActionDuringFlashLoan();
         

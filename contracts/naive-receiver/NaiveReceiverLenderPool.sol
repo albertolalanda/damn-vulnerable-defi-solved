@@ -17,7 +17,7 @@ contract NaiveReceiverLenderPool is ReentrancyGuard {
     function fixedFee() external pure returns (uint256) {
         return FIXED_FEE;
     }
-
+    // The Lender could have checked who was the msg.sender of the function, and infer the borrower address, instead of receiving by parameter
     function flashLoan(address borrower, uint256 borrowAmount) external nonReentrant {
 
         uint256 balanceBefore = address(this).balance;

