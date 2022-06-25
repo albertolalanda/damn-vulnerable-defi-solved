@@ -65,6 +65,7 @@ contract TheRewarderPool {
     function distributeRewards() public returns (uint256) {
         uint256 rewards = 0;
 
+        // If we have a huge number of tokens deposited when the snapshot is taken, we will have a big part of the rewards
         if(isNewRewardsRound()) {
             _recordSnapshot();
         }        
