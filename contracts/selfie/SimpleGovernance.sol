@@ -84,6 +84,7 @@ contract SimpleGovernance {
         );
     }
     
+    // We can get enough votes to queue an action through a flash loan... 
     function _hasEnoughVotes(address account) private view returns (bool) {
         uint256 balance = governanceToken.getBalanceAtLastSnapshot(account);
         uint256 halfTotalSupply = governanceToken.getTotalSupplyAtLastSnapshot() / 2;

@@ -50,7 +50,7 @@ contract HackReward {
     TheRewarderPool public rewardPool;
     RewardToken public reward;
 
-    constructor(address _pool, address _token, address _rewardPool, address _reward) public {
+    constructor(address _pool, address _token, address _rewardPool, address _reward) {
         pool = FlashLoanerPool(_pool);
         token = DamnValuableToken(_token);
         rewardPool = TheRewarderPool(_rewardPool);
