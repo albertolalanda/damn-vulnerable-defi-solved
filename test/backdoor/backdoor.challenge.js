@@ -39,7 +39,7 @@ describe('[Challenge] Backdoor', function () {
         /** CODE YOUR EXPLOIT HERE */
         this.timeout(20000);
         this.token.provider.pollingInterval = 1;
-        this.attackerContract  = await (await ethers.getContractFactory('WalletRegistryAttacker', attacker)).deploy(
+        this.attackerContract  = await (await ethers.getContractFactory('WalletRegistryAttack', attacker)).deploy(
             this.walletFactory.address,
             this.walletRegistry.address,
             this.masterCopy.address,

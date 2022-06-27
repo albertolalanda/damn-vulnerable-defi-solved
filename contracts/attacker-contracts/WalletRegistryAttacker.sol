@@ -12,7 +12,7 @@ interface ProxyFactory {
     ) external returns (GnosisSafeProxy proxy);
 }
 
-contract WalletRegistryAttacker {
+contract WalletRegistryAttack {
 
     address public masterCopyAddress;
     address public walletRegistryAddress;
